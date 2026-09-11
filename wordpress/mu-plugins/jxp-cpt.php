@@ -190,18 +190,8 @@ add_action('init', function() {
     }
 });
 
-// Auto-seed sample demo data if listings are empty
+// Auto-seed sample demo data for all 5 verticals if not already created
 add_action('init', function() {
-    $existing = get_posts([
-        'post_type' => 'listing',
-        'post_status' => 'any',
-        'numberposts' => 1,
-    ]);
-
-    if (!empty($existing)) {
-        return; // Already populated
-    }
-
     $samples = [
         [
             'title' => 'The Glasshouse Eco-Resort',
@@ -278,9 +268,64 @@ add_action('init', function() {
                 'partner_id' => 'partner-003',
             ],
         ],
+        [
+            'title' => 'Equinox Harvest Salon & Dinner',
+            'slug' => 'equinox-harvest-salon',
+            'excerpt' => 'Intimate six-course culinary salon paired with live acoustic strings and organic wines.',
+            'content' => 'An intimate six-course gathering celebrating regional autumn harvests, paired with biodynamic wines, live acoustic strings, and conversation with leading regenerative farmers.',
+            'vertical' => 'Events',
+            'vertical_slug' => 'events',
+            'location' => 'Hudson Valley',
+            'location_slug' => 'hudson-valley',
+            'meta' => [
+                'tagline' => 'Harvest gastronomy, classical strings, and thoughtful community.',
+                'price_tier' => '$$$',
+                'rating' => 4.96,
+                'review_count' => 64,
+                'address' => 'Old Stone Farm, Route 9G',
+                'city' => 'Hudson Valley, New York',
+                'coordinates' => '41.9270, -73.8890',
+                'contact_phone' => '+1 845 876 0000',
+                'contact_email' => 'gather@equinoxsalon.com',
+                'website_url' => 'https://equinoxsalon.com',
+                'booking_url' => 'https://equinoxsalon.com/reserve',
+                'verification_status' => 'verified',
+                'partner_id' => 'partner-004',
+            ],
+        ],
+        [
+            'title' => 'Blue Ridge Heritage Weaver Collective',
+            'slug' => 'blue-ridge-weaver-collective',
+            'excerpt' => 'Regenerative artisan cooperative preserving heirloom handloom weaving and natural dyeing.',
+            'content' => 'A regenerative artisan cooperative preserving generational natural indigo dyeing and heirloom handloom weaving, partnering with boutique hotels worldwide.',
+            'vertical' => 'Community',
+            'vertical_slug' => 'community',
+            'location' => 'Asheville',
+            'location_slug' => 'asheville',
+            'meta' => [
+                'tagline' => 'Heirloom craftsmanship nurturing cultural sustainability.',
+                'price_tier' => '$$',
+                'rating' => 5.0,
+                'review_count' => 82,
+                'address' => 'River Arts District, Studio 14',
+                'city' => 'Asheville, North Carolina',
+                'coordinates' => '35.5951, -82.5515',
+                'contact_phone' => '+1 828 254 0000',
+                'contact_email' => 'contact@blueridgeweavers.org',
+                'website_url' => 'https://blueridgeweavers.org',
+                'booking_url' => 'https://blueridgeweavers.org/visit',
+                'verification_status' => 'verified',
+                'partner_id' => 'partner-005',
+            ],
+        ],
     ];
 
     foreach ($samples as $sample) {
+        $existing = get_page_by_path($sample['slug'], OBJECT, 'listing');
+        if ($existing) {
+            continue;
+        }
+
         $post_id = wp_insert_post([
             'post_title' => $sample['title'],
             'post_name' => $sample['slug'],

@@ -108,51 +108,54 @@ export const GET_LISTING_BY_SLUG_QUERY = /* GraphQL */ `
 `;
 
 export const GET_LISTINGS_BY_VERTICAL_QUERY = /* GraphQL */ `
-  query GetListingsByVertical($verticalSlug: [String]!, $first: Int = 20) {
-    listings(
-      first: $first
-      where: {
-        taxQuery: {
-          taxArray: [
-            {
-              taxonomy: VERTICAL
-              field: SLUG
-              terms: $verticalSlug
+  query GetListingsByVertical($verticalSlug: ID!, $first: Int = 20) {
+    vertical(id: $verticalSlug, idType: SLUG) {
+      id
+      name
+      slug
+      listings(first: $first) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          id
+          databaseId
+          title
+          slug
+          excerpt
+          featuredImage {
+            node {
+              sourceUrl
+              altText
             }
-          ]
-        }
-      }
-    ) {
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      nodes {
-        id
-        databaseId
-        title
-        slug
-        excerpt
-        featuredImage {
-          node {
-            sourceUrl
-            altText
           }
-        }
-        verticals {
-          nodes {
-            name
-            slug
+          verticals {
+            nodes {
+              name
+              slug
+            }
           }
-        }
-        listingDetails {
-          tagline
-          priceTier
-          rating
-          city
-          verificationStatus
+          locations {
+            nodes {
+              name
+              slug
+            }
+          }
+          listingDetails {
+            tagline
+            priceTier
+            rating
+            reviewCount
+            address
+            city
+            websiteUrl
+            bookingUrl
+            verificationStatus
+          }
         }
       }
     }
   }
 `;
+

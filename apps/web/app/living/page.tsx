@@ -11,33 +11,37 @@ export const metadata = {
 
 async function getLivingListings(): Promise<Listing[]> {
   try {
-    const res = await wpClient.request<{ listings: { nodes: Listing[] } }>(
+    const res = await wpClient.request<{ vertical?: { listings?: { nodes: Listing[] } } }>(
       GET_LISTINGS_BY_VERTICAL_QUERY,
-      { verticalSlug: ['living'] }
+      { verticalSlug: 'living' }
     );
-    return res.listings?.nodes || [];
-  } catch (_e) {
-    return [
-      {
-        id: 'living-1',
-        databaseId: 101,
-        title: 'Miramar Botanical Villa & Sanctuary',
-        slug: 'miramar-botanical-villa',
-        excerpt: 'An architecturally celebrated sanctuary immersed in lush private gardens.',
-        date: new Date().toISOString(),
-        listingDetails: { city: 'Sedona', priceTier: '$$$$', rating: 5.0, verificationStatus: 'featured' },
-      },
-      {
-        id: 'living-2',
-        databaseId: 102,
-        title: 'The Foundry Loft & Artist Residence',
-        slug: 'foundry-loft',
-        excerpt: 'Historic brick architecture transformed into a high-design boutique stay.',
-        date: new Date().toISOString(),
-        listingDetails: { city: 'Savannah', priceTier: '$$$', rating: 4.9, verificationStatus: 'verified' },
-      },
-    ];
+    if (res.vertical?.listings?.nodes && res.vertical.listings.nodes.length > 0) {
+      return res.vertical.listings.nodes;
+    }
+  } catch (err) {
+    console.warn('[GraphQL] Living query error, falling back:', err);
   }
+
+  return [
+    {
+      id: 'living-1',
+      databaseId: 101,
+      title: 'The Glasshouse Eco-Resort',
+      slug: 'the-glasshouse-eco-resort',
+      excerpt: 'Luxury sustainable sanctuary nestled in the lush tropical hills of Ubud.',
+      date: new Date().toISOString(),
+      listingDetails: { city: 'Bali, Indonesia', priceTier: '$$$$', rating: 4.95, verificationStatus: 'verified' },
+    },
+    {
+      id: 'living-2',
+      databaseId: 102,
+      title: 'Miramar Botanical Villa & Sanctuary',
+      slug: 'the-glasshouse-eco-resort',
+      excerpt: 'An architecturally celebrated sanctuary immersed in lush private gardens.',
+      date: new Date().toISOString(),
+      listingDetails: { city: 'Sedona', priceTier: '$$$$', rating: 5.0, verificationStatus: 'featured' },
+    },
+  ];
 }
 
 export default async function LivingPage() {
@@ -59,33 +63,38 @@ export default async function LivingPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {listings.map((item) => (
-          <article
+          <Link
             key={item.id}
-            className="bg-[#181818] border border-[#282828] rounded-xl overflow-hidden card-hover-transition group"
+            href={`/listing/${item.slug}`}
+            className="block group"
           >
-            <div className="h-56 bg-zinc-800 relative">
-              <div
-                className="w-full h-full bg-cover bg-center"
-                style={{
-                  backgroundImage:
-                    "url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80')",
-                }}
-              />
-              <div className="absolute top-4 left-4">
-                <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/70 text-white backdrop-blur-sm">
-                  {item.listingDetails?.city}
-                </span>
+            <article className="h-full bg-[#181818] border border-[#282828] rounded-xl overflow-hidden card-hover-transition group-hover:border-[#B3231C] group-hover:-translate-y-1 transition-all duration-300">
+              <div className="h-56 bg-zinc-800 relative overflow-hidden">
+                <div
+                  className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                  style={{
+                    backgroundImage:
+                      "url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80')",
+                  }}
+                />
+                <div className="absolute top-4 left-4">
+                  <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/70 text-white backdrop-blur-sm">
+                    {item.listingDetails?.city || 'Bali'}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="p-6">
-              <h3 className="font-serif text-xl font-bold text-white mb-2">{item.title}</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2 mb-4">{item.excerpt}</p>
-              <div className="pt-4 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-400">
-                <span className="font-semibold text-amber-400">&starf; {item.listingDetails?.rating} Rating</span>
-                <span className="font-mono text-[#B3231C] font-bold">{item.listingDetails?.priceTier}</span>
+              <div className="p-6">
+                <h3 className="font-serif text-xl font-bold text-white group-hover:text-red-400 transition-colors mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2 mb-4">{item.excerpt}</p>
+                <div className="pt-4 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-400">
+                  <span className="font-semibold text-amber-400">&starf; {item.listingDetails?.rating || 4.9} Rating</span>
+                  <span className="font-mono text-[#B3231C] font-bold">{item.listingDetails?.priceTier || '$$$$'}</span>
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </Link>
         ))}
       </div>
     </div>

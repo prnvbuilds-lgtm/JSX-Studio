@@ -159,48 +159,51 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {listings.map((item) => (
-            <article
+            <Link
               key={item.id}
-              className="bg-[#181818] border border-[#2A2A2A] rounded-2xl overflow-hidden card-hover-transition group"
+              href={`/listing/${item.slug}`}
+              className="block group"
             >
-              <div className="h-56 bg-zinc-800 relative overflow-hidden">
-                <div
-                  className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                  style={{
-                    backgroundImage:
-                      "url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80')",
-                  }}
-                />
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/70 text-white backdrop-blur-sm">
-                    {item.listingDetails?.city || 'Featured'}
-                  </span>
-                </div>
-                {item.listingDetails?.priceTier && (
-                  <div className="absolute top-4 right-4">
-                    <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-[#B3231C] text-white">
-                      {item.listingDetails.priceTier}
+              <article className="h-full bg-[#181818] border border-[#2A2A2A] rounded-2xl overflow-hidden card-hover-transition group-hover:border-[#B3231C] group-hover:-translate-y-1 transition-all duration-300">
+                <div className="h-56 bg-zinc-800 relative overflow-hidden">
+                  <div
+                    className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                    style={{
+                      backgroundImage:
+                        "url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80')",
+                    }}
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/70 text-white backdrop-blur-sm">
+                      {item.listingDetails?.city || 'Featured'}
                     </span>
                   </div>
-                )}
-              </div>
-
-              <div className="p-6">
-                <h3 className="font-serif text-xl font-bold text-white group-hover:text-red-400 transition-colors mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2 mb-4">
-                  {item.excerpt}
-                </p>
-
-                <div className="pt-4 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-400">
-                  <span className="flex items-center gap-1 font-semibold text-amber-400">
-                    &starf; {item.listingDetails?.rating || 4.9} ({item.listingDetails?.reviewCount || 100}+ reviews)
-                  </span>
-                  <span className="text-zinc-500 uppercase tracking-wider text-[10px]">JXP Verified</span>
+                  {item.listingDetails?.priceTier && (
+                    <div className="absolute top-4 right-4">
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-[#B3231C] text-white">
+                        {item.listingDetails.priceTier}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </article>
+
+                <div className="p-6">
+                  <h3 className="font-serif text-xl font-bold text-white group-hover:text-red-400 transition-colors mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2 mb-4">
+                    {item.excerpt}
+                  </p>
+
+                  <div className="pt-4 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-400">
+                    <span className="flex items-center gap-1 font-semibold text-amber-400">
+                      &starf; {item.listingDetails?.rating || 4.9} ({item.listingDetails?.reviewCount || 100}+ reviews)
+                    </span>
+                    <span className="text-zinc-500 uppercase tracking-wider text-[10px]">JXP Verified</span>
+                  </div>
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
       </section>
