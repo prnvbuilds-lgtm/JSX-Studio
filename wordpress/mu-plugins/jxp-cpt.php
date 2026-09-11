@@ -38,8 +38,26 @@ add_filter('graphql_union_possible_types', function($types, $config, $union) {
     return $types;
 }, 10, 3);
 
+// Enable GraphQL introspection for development
+add_filter('graphql_is_introspection_allowed', '__return_true');
+
+// Prevent 'vertical' and 'location' from ever being registered as Post Types (taxonomy term collision fix)
 add_action('init', function() {
-    // 1. Listing (Hotels, Dining, Retreats, Experiences)
+    if (post_type_exists('vertical')) {
+        unregister_post_type('vertical');
+    }
+    if (post_type_exists('location')) {
+        unregister_post_type('location');
+    }
+    $cptui_post_types = get_option('cptui_post_types');
+    if (is_array($cptui_post_types) && (isset($cptui_post_types['vertical']) || isset($cptui_post_types['location']))) {
+        unset($cptui_post_types['vertical'], $cptui_post_types['location']);
+        update_option('cptui_post_types', $cptui_post_types);
+    }
+}, 5);
+
+add_action('init', function() {
+
     if (!post_type_exists('listing')) {
         register_post_type('listing', [
             'labels' => [
@@ -171,3 +189,127 @@ add_action('init', function() {
         ]);
     }
 });
+
+// Auto-seed sample demo data if listings are empty
+add_action('init', function() {
+    $existing = get_posts([
+        'post_type' => 'listing',
+        'post_status' => 'any',
+        'numberposts' => 1,
+    ]);
+
+    if (!empty($existing)) {
+        return; // Already populated
+    }
+
+    $samples = [
+        [
+            'title' => 'The Glasshouse Eco-Resort',
+            'slug' => 'the-glasshouse-eco-resort',
+            'excerpt' => 'Luxury sustainable sanctuary nestled in the lush tropical hills of Ubud.',
+            'content' => 'A luxury sustainable sanctuary nestled in the lush tropical hills, offering panoramic forest views, organic dining, and private infinity plunge pools.',
+            'vertical' => 'Living',
+            'vertical_slug' => 'living',
+            'location' => 'Bali',
+            'location_slug' => 'bali',
+            'meta' => [
+                'tagline' => 'Sustainable architecture meets ultra-luxury in Ubud.',
+                'price_tier' => '$$$$',
+                'rating' => 4.95,
+                'review_count' => 142,
+                'address' => 'Jl. Raya Sayan No. 88, Ubud',
+                'city' => 'Bali, Indonesia',
+                'coordinates' => '-8.5193, 115.2435',
+                'contact_phone' => '+62 361 889900',
+                'contact_email' => 'concierge@glasshouseresort.com',
+                'website_url' => 'https://glasshouseresort.com',
+                'booking_url' => 'https://glasshouseresort.com/reserve',
+                'verification_status' => 'verified',
+                'partner_id' => 'partner-001',
+            ],
+        ],
+        [
+            'title' => 'Osteria Del Mare',
+            'slug' => 'osteria-del-mare',
+            'excerpt' => 'Michelin-starred seaside dining celebrating heritage coastal Italian gastronomy.',
+            'content' => 'Michelin-starred seaside dining celebrating heritage coastal Italian gastronomy, fresh daily catch, and biodynamic natural wines.',
+            'vertical' => 'Dining',
+            'vertical_slug' => 'dining',
+            'location' => 'Amalfi',
+            'location_slug' => 'amalfi',
+            'meta' => [
+                'tagline' => 'Coastal gastronomy with cliffside Mediterranean vistas.',
+                'price_tier' => '$$$',
+                'rating' => 4.88,
+                'review_count' => 215,
+                'address' => 'Via Panoramica 12',
+                'city' => 'Positano, Italy',
+                'coordinates' => '40.6281, 14.4850',
+                'contact_phone' => '+39 089 875000',
+                'contact_email' => 'reservations@osteriadelmare.it',
+                'website_url' => 'https://osteriadelmare.it',
+                'booking_url' => 'https://osteriadelmare.it/table',
+                'verification_status' => 'verified',
+                'partner_id' => 'partner-002',
+            ],
+        ],
+        [
+            'title' => 'Komorebi Forest Onsen',
+            'slug' => 'komorebi-forest-onsen',
+            'excerpt' => 'Traditional Japanese ryokan with geothermal open-air cedar onsen baths.',
+            'content' => 'Traditional Japanese ryokan with geothermal open-air cedar onsen baths, kaiseki multi-course dinners, and zen forest architecture.',
+            'vertical' => 'Travel',
+            'vertical_slug' => 'travel',
+            'location' => 'Kyoto',
+            'location_slug' => 'kyoto',
+            'meta' => [
+                'tagline' => 'Centuries-old healing waters and minimalist sanctuary.',
+                'price_tier' => '$$$$',
+                'rating' => 4.98,
+                'review_count' => 98,
+                'address' => 'Arashiyama Sagatenryuji',
+                'city' => 'Kyoto, Japan',
+                'coordinates' => '35.0116, 135.6778',
+                'contact_phone' => '+81 75 871 0000',
+                'contact_email' => 'stay@komorebi-onsen.jp',
+                'website_url' => 'https://komorebi-onsen.jp',
+                'booking_url' => 'https://komorebi-onsen.jp/book',
+                'verification_status' => 'verified',
+                'partner_id' => 'partner-003',
+            ],
+        ],
+    ];
+
+    foreach ($samples as $sample) {
+        $post_id = wp_insert_post([
+            'post_title' => $sample['title'],
+            'post_name' => $sample['slug'],
+            'post_content' => $sample['content'],
+            'post_excerpt' => $sample['excerpt'],
+            'post_status' => 'publish',
+            'post_type' => 'listing',
+        ]);
+
+        if (is_wp_error($post_id) || !$post_id) {
+            continue;
+        }
+
+        // Attach taxonomies
+        if (!empty($sample['vertical'])) {
+            wp_set_object_terms($post_id, [$sample['vertical']], 'vertical');
+        }
+        if (!empty($sample['location'])) {
+            wp_set_object_terms($post_id, [$sample['location']], 'location');
+        }
+
+        // Attach ACF fields and post meta
+        foreach ($sample['meta'] as $meta_key => $meta_val) {
+            update_post_meta($post_id, $meta_key, $meta_val);
+            update_post_meta($post_id, '_' . $meta_key, 'field_listing_' . $meta_key);
+            if (function_exists('update_field')) {
+                update_field($meta_key, $meta_val, $post_id);
+            }
+        }
+    }
+}, 20);
+
