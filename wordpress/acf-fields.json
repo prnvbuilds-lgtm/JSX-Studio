@@ -1,0 +1,325 @@
+[
+  {
+    "key": "group_jxp_listing_fields",
+    "title": "Listing Details & Specs",
+    "fields": [
+      {
+        "key": "field_listing_tagline",
+        "label": "Tagline",
+        "name": "tagline",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_price_tier",
+        "label": "Price Tier",
+        "name": "price_tier",
+        "type": "select",
+        "choices": {
+          "$": "$ (Budget-Friendly)",
+          "$$": "$$ (Moderate)",
+          "$$$": "$$$ (Upscale)",
+          "$$$$": "$$$$ (Luxury / Ultra)"
+        },
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_rating",
+        "label": "Rating Score (1-5)",
+        "name": "rating",
+        "type": "number",
+        "step": "0.1",
+        "min": 1,
+        "max": 5,
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_review_count",
+        "label": "Review Count",
+        "name": "review_count",
+        "type": "number",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_address",
+        "label": "Street Address",
+        "name": "address",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_city",
+        "label": "City",
+        "name": "city",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_coordinates",
+        "label": "Coordinates (Lat, Lng)",
+        "name": "coordinates",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_contact_phone",
+        "label": "Contact Phone",
+        "name": "contact_phone",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_contact_email",
+        "label": "Contact Email",
+        "name": "contact_email",
+        "type": "email",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_website_url",
+        "label": "Website URL",
+        "name": "website_url",
+        "type": "url",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_booking_url",
+        "label": "Direct Booking / Reservation URL",
+        "name": "booking_url",
+        "type": "url",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_verification_status",
+        "label": "Verification Status",
+        "name": "verification_status",
+        "type": "select",
+        "choices": {
+          "verified": "Verified JXP Partner",
+          "featured": "Featured Spot",
+          "pending": "Pending Verification"
+        },
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_listing_partner_id",
+        "label": "Partner Account ID / Slug",
+        "name": "partner_id",
+        "type": "text",
+        "show_in_graphql": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "listing"
+        }
+      ]
+    ],
+    "show_in_graphql": 1,
+    "graphql_field_name": "listingDetails"
+  },
+  {
+    "key": "group_jxp_campaign_fields",
+    "title": "Campaign Details & Schedule",
+    "fields": [
+      {
+        "key": "field_campaign_type",
+        "label": "Campaign Type",
+        "name": "campaign_type",
+        "type": "select",
+        "choices": {
+          "seasonal": "Seasonal Promotion",
+          "spotlight": "Partner Spotlight",
+          "flash_deal": "Exclusive Perk / Deal",
+          "sponsored_event": "Sponsored Event"
+        },
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_campaign_status",
+        "label": "Status",
+        "name": "campaign_status",
+        "type": "select",
+        "choices": {
+          "draft": "Draft",
+          "scheduled": "Scheduled",
+          "active": "Active",
+          "completed": "Completed"
+        },
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_campaign_start_date",
+        "label": "Start Date",
+        "name": "start_date",
+        "type": "date_picker",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_campaign_end_date",
+        "label": "End Date",
+        "name": "end_date",
+        "type": "date_picker",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_campaign_hero_badge",
+        "label": "Hero Badge Label",
+        "name": "hero_badge_label",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_campaign_cta_label",
+        "label": "CTA Button Label",
+        "name": "cta_label",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_campaign_cta_url",
+        "label": "CTA Destination URL",
+        "name": "cta_url",
+        "type": "url",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_campaign_partner_id",
+        "label": "Partner Account ID / Slug",
+        "name": "partner_id",
+        "type": "text",
+        "show_in_graphql": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "campaign"
+        }
+      ]
+    ],
+    "show_in_graphql": 1,
+    "graphql_field_name": "campaignDetails"
+  },
+  {
+    "key": "group_jxp_partner_profile_fields",
+    "title": "Partner Profile & Verification",
+    "fields": [
+      {
+        "key": "field_partner_company_name",
+        "label": "Company / Brand Name",
+        "name": "company_name",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_partner_tier",
+        "label": "Partner Tier",
+        "name": "partner_tier",
+        "type": "select",
+        "choices": {
+          "standard": "Standard Partner",
+          "premium": "Premium Partner",
+          "founding_partner": "Founding Partner"
+        },
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_partner_contact_name",
+        "label": "Primary Contact Name",
+        "name": "contact_name",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_partner_contact_email",
+        "label": "Primary Contact Email",
+        "name": "contact_email",
+        "type": "email",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_partner_verified",
+        "label": "Is Verified Partner",
+        "name": "is_verified",
+        "type": "true_false",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_partner_headquarters",
+        "label": "Headquarters Location",
+        "name": "headquarters",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_partner_member_since",
+        "label": "Member Since",
+        "name": "member_since",
+        "type": "date_picker",
+        "show_in_graphql": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "partner_profile"
+        }
+      ]
+    ],
+    "show_in_graphql": 1,
+    "graphql_field_name": "partnerDetails"
+  },
+  {
+    "key": "group_jxp_guide_post_fields",
+    "title": "Editorial Guide Details",
+    "fields": [
+      {
+        "key": "field_guide_author_name",
+        "label": "Curator / Author Name",
+        "name": "author_name",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_guide_reading_time",
+        "label": "Estimated Reading Time (Mins)",
+        "name": "reading_time_minutes",
+        "type": "number",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_guide_badge",
+        "label": "Editorial Badge (e.g. Curator's Pick)",
+        "name": "editorial_badge",
+        "type": "text",
+        "show_in_graphql": 1
+      },
+      {
+        "key": "field_guide_curator_notes",
+        "label": "Curator Highlights / Pro Tips",
+        "name": "curator_notes",
+        "type": "wysiwyg",
+        "show_in_graphql": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "guide_post"
+        }
+      ]
+    ],
+    "show_in_graphql": 1,
+    "graphql_field_name": "guideDetails"
+  }
+]

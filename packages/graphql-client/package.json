@@ -1,0 +1,28 @@
+{
+  "name": "@jxp/graphql-client",
+  "version": "0.1.0",
+  "description": "Shared WPGraphQL client and typed content models for JXP Guide headless WordPress",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "graphql",
+    "wpgraphql",
+    "headless-wordpress",
+    "jxp-guide"
+  ],
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

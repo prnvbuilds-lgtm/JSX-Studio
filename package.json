@@ -1,0 +1,20 @@
+{
+  "name": "jxp-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Headless WordPress + React platform for JXP Guide hospitality and travel brand",
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter @jxp/web dev\" \"pnpm --filter @jxp/partner-hub dev\" \"python -m uvicorn app.main:app --app-dir services/api --reload --port 8000\"",
+    "dev:frontend": "concurrently \"pnpm --filter @jxp/web dev\" \"pnpm --filter @jxp/partner-hub dev\"",
+    "dev:web": "pnpm --filter @jxp/web dev",
+    "dev:hub": "pnpm --filter @jxp/partner-hub dev",
+    "dev:api": "python -m uvicorn app.main:app --app-dir services/api --reload --port 8000",
+    "build": "pnpm --filter ./packages/* --filter ./apps/* run build",
+    "typecheck": "pnpm --filter ./packages/* --filter ./apps/* run typecheck",
+    "lint": "pnpm --filter ./packages/* --filter ./apps/* run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "prettier": "^3.3.3"
+  }
+}
