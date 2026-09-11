@@ -36,8 +36,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Build shared packages
+        run: |
+          pnpm --filter @jxp/ui run build
+          pnpm --filter @jxp/graphql-client run build
+
       - name: Build Partner Hub
-        run: pnpm --filter ...@jxp/partner-hub run build
+        run: pnpm --filter @jxp/partner-hub run build
+
+      - name: Build Next.js Website (Static Export)
+        env:
+          GITHUB_ACTIONS: 'true'
+          DEPLOY_TARGET: 'gh-pages'
+        run: pnpm --filter @jxp/web run build
+
+      - name: Bundle Partner Hub into Website and Add .nojekyll
+        run: |
+          mkdir -p ./apps/web/out/partner-hub
+          cp -r ./apps/partner-hub/dist/* ./apps/web/out/partner-hub/
+          touch ./apps/web/out/.nojekyll
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -45,7 +62,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './apps/partner-hub/dist'
+          path: './apps/web/out'
 
       - name: Deploy to GitHub Pages
         id: deployment

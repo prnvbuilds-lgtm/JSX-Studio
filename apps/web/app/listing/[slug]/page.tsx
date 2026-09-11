@@ -123,6 +123,28 @@ async function getRelatedListings(currentSlug: string): Promise<Listing[]> {
   }
 }
 
+export async function generateStaticParams() {
+  try {
+    const res = await wpClient.request<{ listings?: { nodes?: { slug: string }[] } }>(
+      GET_ALL_LISTINGS_QUERY,
+      { first: 50 }
+    );
+    if (res.listings?.nodes && res.listings.nodes.length > 0) {
+      return res.listings.nodes.map((item) => ({ slug: item.slug }));
+    }
+  } catch (_e) {
+    // fallback if WordPress is offline during static export
+  }
+
+  return [
+    { slug: 'the-glasshouse-eco-resort' },
+    { slug: 'osteria-del-mare' },
+    { slug: 'komorebi-forest-onsen' },
+    { slug: 'equinox-harvest-salon' },
+    { slug: 'blue-ridge-weaver-collective' },
+  ];
+}
+
 export async function generateMetadata({ params }: ListingPageProps) {
   const { slug } = await params;
   const listing = await getListing(slug);

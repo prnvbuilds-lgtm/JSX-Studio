@@ -54,14 +54,12 @@ export const Header: React.FC = () => {
           >
             PARTNER WITH JXP
           </Link>
-          <a
-            href="http://localhost:5173"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={process.env.NODE_ENV === 'production' ? '/partner-hub' : 'http://localhost:5173'}
             className="text-xs uppercase tracking-[0.16em] font-bold text-zinc-400 hover:text-white transition-colors"
           >
-            Partner Hub →
-          </a>
+            Partner Hub &rarr;
+          </Link>
         </div>
       </div>
     </header>
