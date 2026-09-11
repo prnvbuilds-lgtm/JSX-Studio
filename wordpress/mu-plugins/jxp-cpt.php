@@ -313,3 +313,56 @@ add_action('init', function() {
     }
 }, 20);
 
+// --- Headless WordPress Mode: Route frontend to Next.js (port 3000) ---
+
+// Override "Visit Site" in WP Admin bar to point to the Next.js frontend
+add_action('admin_bar_menu', function($wp_admin_bar) {
+    $frontend_url = getenv('FRONTEND_URL') ?: 'http://localhost:3000';
+
+    $view_site = $wp_admin_bar->get_node('view-site');
+    if ($view_site) {
+        $view_site->href = $frontend_url;
+        $view_site->meta['target'] = '_blank';
+        $wp_admin_bar->add_node($view_site);
+    }
+
+    $site_name = $wp_admin_bar->get_node('site-name');
+    if ($site_name) {
+        $site_name->href = $frontend_url;
+        $site_name->meta['target'] = '_blank';
+        $wp_admin_bar->add_node($site_name);
+    }
+}, 80);
+
+// Redirect WordPress public frontend visitors to Next.js site
+add_action('template_redirect', function() {
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron() || defined('REST_REQUEST')) {
+        return;
+    }
+
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+
+    // Never intercept API routes
+    if (strpos($request_uri, '/graphql') === 0 || strpos($request_uri, '/wp-json') === 0) {
+        return;
+    }
+
+    $frontend_url = getenv('FRONTEND_URL') ?: 'http://localhost:3000';
+
+    // Redirect homepage to Next.js
+    if (is_front_page() || is_home()) {
+        wp_redirect($frontend_url, 302);
+        exit;
+    }
+
+    // Redirect individual listing to Next.js listing route
+    if (is_singular('listing')) {
+        global $post;
+        if ($post && !empty($post->post_name)) {
+            wp_redirect($frontend_url . '/listing/' . $post->post_name, 302);
+            exit;
+        }
+    }
+});
+
+
