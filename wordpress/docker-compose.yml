@@ -43,19 +43,14 @@ services:
         define('WP_HOME', 'http://localhost:${WORDPRESS_PORT:-8080}');
         define('WP_SITEURL', 'http://localhost:${WORDPRESS_PORT:-8080}');
         define('GRAPHQL_JWT_AUTH_SECRET_KEY', '${GRAPHQL_JWT_AUTH_SECRET_KEY:-change_me_to_a_secure_random_string_in_production}');
-        define('WP_DEBUG', true);
-        define('WP_DEBUG_LOG', true);
-        define('WP_DEBUG_DISPLAY', false);
         /* Enable CORS for Headless Frontend clients */
-        add_action('init', function() {
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
-            header("Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With");
-            if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
-                status_header(200);
-                exit();
-            }
-        });
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+        header("Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With");
+        if (isset($$_SERVER['REQUEST_METHOD']) && 'OPTIONS' === $$_SERVER['REQUEST_METHOD']) {
+            header("HTTP/1.1 200 OK");
+            exit();
+        }
     volumes:
       - wp_data:/var/www/html
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
